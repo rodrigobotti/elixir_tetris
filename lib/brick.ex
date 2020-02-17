@@ -1,13 +1,24 @@
 defmodule Tetris.Brick do
+
+  @type point :: { integer, integer }
+  @type brick_name :: :i | :l | :z | :o | :t
+  @type attributes :: [name: brick_name]
+  @type t :: %__MODULE__{
+    name: brick_name(),
+    location: {integer(), integer()},
+    rotation: 0 | 90 | 180 | 270,
+    reflection: boolean()
+  }
+
+  alias __MODULE__, as: Brick
+
   defstruct name: :i,
             location: {40, 0},
             rotation: 0,
             reflection: false
 
-  alias __MODULE__, as: Brick
-
-  @spec new :: Tetris.Brick.t()
-  def new, do: %Brick{}
+  @spec new(attributes | nil) :: Tetris.Brick.t()
+  def new(attributes \\ []), do: __struct__(attributes)
 
   @spec new_random :: Tetris.Brick.t()
   def new_random do
@@ -34,8 +45,46 @@ defmodule Tetris.Brick do
     %Brick{brick | location: point_right(brick.location)}
   end
 
+  @spec spin_90(Tetris.Brick.t()) :: Tetris.Brick.t()
   def spin_90(brick) do
     %Brick{brick | rotation: rotate(brick.rotation)}
+  end
+
+  @spec shape(Tetris.Brick.t()) :: [point]
+  def shape(%Brick{name: :l}) do
+    [
+      {2, 1},
+      {2, 2},
+      {2, 3}, {3, 3}
+    ]
+  end
+  def shape(%Brick{name: :i}) do
+    [
+      {2, 1},
+      {2, 2},
+      {2, 3},
+      {2, 4}
+    ]
+  end
+  def shape(%Brick{name: :o}) do
+    [
+      {2, 2}, {3, 2},
+      {2, 3}, {3, 3}
+    ]
+  end
+  def shape(%Brick{name: :z}) do
+    [
+      {2, 1},
+      {2, 3}, {3, 3},
+              {3, 4}
+    ]
+  end
+  def shape(%Brick{name: :t}) do
+    [
+      {2, 1},
+      {2, 2}, {3, 2},
+      {2, 3}
+    ]
   end
 
   defp point_down({x, y}), do: {x, y + 1}
