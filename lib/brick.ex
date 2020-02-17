@@ -11,6 +11,7 @@ defmodule Tetris.Brick do
   }
 
   alias __MODULE__, as: Brick
+  alias Tetris.Points
 
   defstruct name: :i,
             location: {40, 0},
@@ -75,8 +76,8 @@ defmodule Tetris.Brick do
   def shape(%Brick{name: :z}) do
     [
       {2, 1},
-      {2, 3}, {3, 3},
-              {3, 4}
+      {2, 2}, {3, 2},
+              {3, 3}
     ]
   end
   def shape(%Brick{name: :t}) do
@@ -85,6 +86,19 @@ defmodule Tetris.Brick do
       {2, 2}, {3, 2},
       {2, 3}
     ]
+  end
+
+  def to_string(brick) do
+    brick
+    |> shape()
+    |> Points.to_string()
+  end
+
+  def print(brick) do
+    brick
+    |> shape()
+    |> Points.print()
+    brick
   end
 
   defp point_down({x, y}), do: {x, y + 1}
