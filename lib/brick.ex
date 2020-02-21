@@ -88,11 +88,18 @@ defmodule Tetris.Brick do
     ]
   end
 
+  def color(%Brick{name: :i}), do: :blue
+  def color(%Brick{name: :l}), do: :green
+  def color(%Brick{name: :z}), do: :orange
+  def color(%Brick{name: :o}), do: :red
+  def color(%Brick{name: :t}), do: :yellow
+
   def prepare(brick) do
     brick
     |> shape()
     |> Points.rotate(brick.rotation)
     |> Points.mirror(brick.reflection)
+    |> Points.with_color(color(brick))
   end
 
   def to_string(brick) do
