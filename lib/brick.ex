@@ -88,15 +88,22 @@ defmodule Tetris.Brick do
     ]
   end
 
-  def to_string(brick) do
+  def prepare(brick) do
     brick
     |> shape()
+    |> Points.rotate(brick.rotation)
+    |> Points.mirror(brick.reflection)
+  end
+
+  def to_string(brick) do
+    brick
+    |> prepare()
     |> Points.to_string()
   end
 
   def print(brick) do
     brick
-    |> shape()
+    |> prepare()
     |> Points.print()
     brick
   end
@@ -122,4 +129,18 @@ defmodule Tetris.Brick do
     [0, 90, 180, 270]
     |> Enum.random()
   end
+
+  defimpl Inspect, for: Brick do
+    import Inspect.Algebra
+    def inspect(brick, _opts) do
+      concat([
+        Brick.to_string(brick),
+        "\n",
+        "location: ", inspect(brick.location), ", ",
+        "reflection: ", inspect(brick.reflection), ", ",
+        "rotation: ", inspect(brick.rotation)
+      ])
+    end
+  end
+
 end
